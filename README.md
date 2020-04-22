@@ -23,16 +23,11 @@ It provides fully customizeable image, video, and web page wallpapers that can b
 
 ![s1](https://raw.githubusercontent.com/cheesecakeufo/komorebi/master/screenshots/collage.jpg)
 
+## Which change does this fork have compared to the original repository?
 
-## How do I install Komorebi?
+Well the original Komorebi repository used some functions of Gtk.Screen. Some of these were deprecated and thus not working correctly. However i looked at the deprecated functions in the vala documentations and there were replacements for them in Gtk.Display. In this fork i replaced Gtk.Screen by Gtk.Display. I confirmed it to be working on dual monitor setups with Ubuntu 18.04. I created this fork because the original developer of Komorebi was inactive for a long time and since there was no other solution available on the internet. Since this is a fork the packaged install does not have the changes i added to them, so I removed that tutorial from this readme. 
 
-Two ways:
-
-### Packaged install (easy)
-
-1. Download `Komorebi` from the [Komorebi releases page](https://github.com/cheesecakeufo/komorebi/releases).
-2. Install Komorebi using your favorite package installer (aka. double click on it)
-3. Launch Komorebi!
+## How do I install Komorebi this forked version of Komorebi?
 
 ### Manual Installing (advanced)
 
@@ -42,7 +37,7 @@ sudo add-apt-repository ppa:gnome3-team/gnome3 -y
 sudo add-apt-repository ppa:vala-team -y
 sudo add-apt-repository ppa:gnome3-team/gnome3-staging -y
 sudo apt install cmake valac libgtk-3-dev libgee-0.8-dev libclutter-gtk-1.0-dev libclutter-1.0-dev libwebkit2gtk-4.0-dev libclutter-gst-3.0-dev
-git clone https://github.com/cheesecakeufo/komorebi.git
+git clone https://github.com/HakanIlbas/komorebi.git
 cd komorebi
 mkdir build && cd build
 cmake .. && sudo make install && ./komorebi
@@ -63,11 +58,6 @@ You can use either an image, a video, or a web page as a wallpaper and you have 
 
 ## Uninstall
 
-### If you installed a packaged version of Komorebi
-
-1. Open Terminal
-2. `sudo apt remove komorebi`
-
 ### If you manually installed Komorebi
 
 1. Open Terminal
@@ -75,6 +65,10 @@ You can use either an image, a video, or a web page as a wallpaper and you have 
 3. `sudo make uninstall`
 
 ## Questions? Issues?
+
+### Will this fork actively resolve the issues of Komorebi
+
+Maybe some of them, but definitely not all of them. I will probably also not add extra features to it. I only created this fork so more people can use it for whom it did not work. There was also no clear fix for the problem i tried to resolve in this fork.
 
 ### Komorebi is slow. What can I do about it?
 
