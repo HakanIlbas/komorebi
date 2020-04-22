@@ -33,6 +33,10 @@ namespace Komorebi {
         return true;
     }
 
+    public static BackgroundWindow[] getBackgroundWindows() {
+        return backgroundWindows;
+    }
+
     public static void main (string [] args) {
 
         print("Welcome to Komorebi\n");

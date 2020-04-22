@@ -16,6 +16,7 @@
 using Clutter;
 
 using Komorebi.Utilities;
+using Komorebi;
 
 namespace Komorebi.OnScreen {
 
@@ -39,6 +40,7 @@ namespace Komorebi.OnScreen {
 		/*BubbleMenuItem hideAllWindowsMenuItem*/
 		BubbleMenuItem changeWallpaperMenuItem;
 		BubbleMenuItem preferencesMenuItem;
+		BubbleMenuItem playPausePlaybackMenuItem;
 
 		// Menu Items (Icon)
 		BubbleMenuItem moveToTrashMenuItem;
@@ -51,6 +53,9 @@ namespace Komorebi.OnScreen {
 
 		// Type of this menu
 		MenuType menuType;
+
+		// To play/pause playback
+		bool playback;
 
 		construct {
 
@@ -75,6 +80,7 @@ namespace Komorebi.OnScreen {
 			pasteMenuItem = new BubbleMenuItem("Paste");
 			changeWallpaperMenuItem = new BubbleMenuItem("Change Wallpaper");
 			preferencesMenuItem = new BubbleMenuItem("Desktop Preferences");
+			playPausePlaybackMenuItem = new BubbleMenuItem("Play/Pause Playback");
 
 			// icon items
 			moveToTrashMenuItem = new BubbleMenuItem("Move to Trash");
@@ -133,6 +139,27 @@ namespace Komorebi.OnScreen {
 					new PreferencesWindow();
 
 				}
+				return true;
+			});
+
+			playPausePlaybackMenuItem.button_press_event.connect(() => {
+
+				if(canOpenPreferences) {
+					canOpenPreferences = false;
+				
+				}
+
+				BackgroundWindow[] BackgroundWindows = getBackgroundWindows();
+
+				foreach (BackgroundWindow bgw in BackgroundWindows) {
+					if (bgw.videoContent.get_player().get_playing()){
+						bgw.videoContent.get_player().set_playing(false);
+					} else {
+						bgw.videoContent.get_player().set_playing(true);
+					}
+				}
+
+			
 				return true;
 			});
 
@@ -222,6 +249,7 @@ namespace Komorebi.OnScreen {
 
 				add_child(changeWallpaperMenuItem);
 				add_child(preferencesMenuItem);
+				add_child(playPausePlaybackMenuItem);
 
 			}
 

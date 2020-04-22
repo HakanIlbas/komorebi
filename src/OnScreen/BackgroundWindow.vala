@@ -59,8 +59,8 @@ namespace Komorebi.OnScreen {
 		public Clutter.Actor mainActor { get; private set; }
 
 		// Video Wallpaper
-		ClutterGst.Playback videoPlayback;
-		ClutterGst.Content videoContent;
+		public ClutterGst.Playback videoPlayback;
+		public ClutterGst.Content videoContent;
 
 		// Wallpaper pixbuf & image
 		Clutter.Actor wallpaperActor = new Clutter.Actor();
