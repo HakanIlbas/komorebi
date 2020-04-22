@@ -43,8 +43,8 @@ namespace Komorebi.OnScreen {
 	// Global - Clipboard
 	Gtk.Clipboard clipboard;
 
-	public static void initializeClipboard(Gdk.Screen screen) {
-		clipboard = Gtk.Clipboard.get_for_display (screen.get_display (), Gdk.SELECTION_CLIPBOARD);
+	public static void initializeClipboard(Gdk.Display display) {
+		clipboard = Gtk.Clipboard.get_for_display (display, Gdk.SELECTION_CLIPBOARD);
 	}
 
 	public class BackgroundWindow : Gtk.Window {

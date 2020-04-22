@@ -61,11 +61,11 @@ namespace Komorebi {
 
         Gtk.Settings.get_default().gtk_application_prefer_dark_theme = true;
 
-        var screen = Gdk.Screen.get_default ();
-        int monitorCount = screen.get_n_monitors();
+        var display = Gdk.Display.get_default ();
+        int monitorCount = display.get_n_monitors();
 
 
-        initializeClipboard(screen);
+        initializeClipboard(display);
 
         readWallpaperFile();
 
