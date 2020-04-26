@@ -27,7 +27,6 @@ namespace Komorebi.OnScreen {
 	}
 
 	public class BubbleMenu : Actor {
-
 		BackgroundWindow parent;
 
 		// Horizontal Box Layout
@@ -60,7 +59,6 @@ namespace Komorebi.OnScreen {
 		bool playback;
 
 		construct {
-
 			// Properties
 			opacity = 0;
 
@@ -69,7 +67,6 @@ namespace Komorebi.OnScreen {
 			margin_right = 5;
 			margin_left = 20;
 			margin_bottom = 5;
-
 		}
 
 
@@ -91,7 +88,6 @@ namespace Komorebi.OnScreen {
 			makeAliasMenuItem = new BubbleMenuItem("Make Alias");
 			getInfoMenuItem = new BubbleMenuItem("Get Info");
 
-
 			// Signals
 			signalsSetup();
 		}
@@ -99,7 +95,6 @@ namespace Komorebi.OnScreen {
 		
 
 		void signalsSetup () {
-
 			newFolderMenuItem.button_press_event.connect(() => {
 				parent.desktopIcons.createNewFolder();
 				return true;
@@ -122,7 +117,6 @@ namespace Komorebi.OnScreen {
 				}
 
 				fadeOut();
-
 				if(canOpenPreferences){
 					canOpenPreferences = false;
 					new PreferencesWindow("wallpapers");
@@ -140,7 +134,6 @@ namespace Komorebi.OnScreen {
 
 			playPausePlaybackMenuItem.button_press_event.connect(() => {
 				BackgroundWindow[] BackgroundWindows = getBackgroundWindows();
-
 				foreach (BackgroundWindow bgw in BackgroundWindows) {
 					if (bgw.videoContent.get_player().get_playing()){
 						bgw.videoContent.get_player().set_playing(false);
@@ -160,10 +153,8 @@ namespace Komorebi.OnScreen {
 				return true;
 			});
 
-
 			// Icon items
 			copyMenuItem.button_press_event.connect(() => {
-
 				// Copy file/folder
 				clipboard.set_text(icon.filePath, icon.filePath.length);
 				clipboard.store();
@@ -172,16 +163,12 @@ namespace Komorebi.OnScreen {
 			});
 
 			moveToTrashMenuItem.button_press_event.connect(() => {
-
 				icon.trash();
-
 				// Move file/folder to trash
 				var sourceFile = File.new_for_path(icon.filePath);
-
 				try {
 					sourceFile.trash();
 				} catch (Error e) {
-
 					print ("Error deleting %s: %s\n", icon.titleName, e.message);
 				}
 
@@ -200,24 +187,17 @@ namespace Komorebi.OnScreen {
 		}
 
 		public void setIcon (OnScreen.Icon icon) {
-
 			this.icon = icon;
-
 		}
 
 		public void fadeIn (double x, double y, MenuType menuType) {
-
 			this.menuType = menuType;
-
 			if(menuType == MenuType.ICON) {
-
 				add_child(moveToTrashMenuItem);
 				add_child(copyMenuItem);
 				// add_child(makeAliasMenuItem);
 				add_child(getInfoMenuItem);
-
 			} else {
-
 				// Dim all icons
 				foreach (var icon in parent.desktopIcons.iconsList)
 					icon.dimIcon();
@@ -225,7 +205,6 @@ namespace Komorebi.OnScreen {
 				// Check if we have anything in the clipboard,
 				// if not, disable the 'Paste' menu item
 				var clipboardText = clipboard.wait_for_text ();
-
 				if(clipboardText == "" || clipboardText == null) {
 					pasteMenuItem.opacity = 10;
 					pasteMenuItem.set_reactive(false);
@@ -241,14 +220,14 @@ namespace Komorebi.OnScreen {
 				}
 
 				// If we have a web page wallpaper, show the 'refresh wallpaper' menu item
-				if(wallpaperType == "web_page")
+				if(wallpaperType == "web_page"){
 					add_child(refreshMenuItem);
+				}
 
 				add_child(changeWallpaperMenuItem);
 				add_child(preferencesMenuItem);
 				add_child(playPausePlaybackMenuItem);
 				add_child(mute);
-
 			}
 
 			// Make sure we don't display off the screen
@@ -258,8 +237,9 @@ namespace Komorebi.OnScreen {
 				x -= width + 15;
 			}
 
-			if((y + height) >= parent.mainActor.height)
+			if((y + height) >= parent.mainActor.height){
 				y -= (height + 10);
+			}
 
 			opacity = 0;
 			this.x = (float)x;
@@ -275,7 +255,6 @@ namespace Komorebi.OnScreen {
 		}
 
 		public void fadeOut () {
-
 			save_easing_state ();
 			set_easing_duration (90);
 			scale_x = 0.9f;

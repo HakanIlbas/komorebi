@@ -27,7 +27,6 @@ using GLib.Environment;
 namespace Komorebi.OnScreen {
 
     public class RowLabel : Gtk.EventBox {
-
     	// Switch between mainBox and 'Copied' label
     	private Stack stack = new Stack();
 
@@ -62,14 +61,12 @@ namespace Komorebi.OnScreen {
                         }";
 
     	public RowLabel(string nameString) {
-
     		nameLabel.label = nameString;
     		copiedLabel.label = nameString + " copied";
 
     		margin = 10;
             add_events (EventMask.ALL_EVENTS_MASK);
             applyCSS({this}, CSS);
-
 
     		stack.set_transition_type(StackTransitionType.CROSSFADE);
     		stack.set_transition_duration(300);
@@ -83,39 +80,29 @@ namespace Komorebi.OnScreen {
 
             // Signals
             button_press_event.connect(() => {
-
             	// Set the clipboard's value
             	clipboard.set_text (valueLabel.label, -1);
-
     			stack.set_visible_child(copiedLabel);
-
             	Timeout.add(600, () => {
-
     				stack.set_visible_child(mainBox);
-
             		return false;
             	});
 
             	return true;
             });
 
-
     		mainBox.pack_start(nameLabel);
     		mainBox.pack_end(valueLabel);
 
     		stack.add_named(mainBox, "mainBox");
     		stack.add_named(copiedLabel, "copiedLabel");
-
     		stack.set_visible_child(mainBox);
-
     		add(stack);
     	}
 
     	public void set_value(string valueString) {
-
     		valueLabel.label = valueString;
     		valueLabel.tooltip_text = valueString;
     	}
     }
-
 }

@@ -21,7 +21,6 @@ using Komorebi.Utilities;
 namespace Komorebi.OnScreen {
 
     public class DateTimeBox : Clutter.Actor {
-
         public Clutter.Actor textContainerActor = new Clutter.Actor();
         public Clutter.Text timeText = new Clutter.Text();
         public Clutter.Text dateText = new Clutter.Text();
@@ -45,7 +44,6 @@ namespace Komorebi.OnScreen {
         BackgroundWindow parent;
 
         public DateTimeBox (BackgroundWindow parent) {
-
             this.parent = parent;
 
             // Properties
@@ -58,7 +56,6 @@ namespace Komorebi.OnScreen {
 
             textContainerActor.background_color = {0,0,0,0};
             shadowContainerActor.background_color = {0,0,0,0};
-
 
             timeText.x_expand = true;
             timeText.y_expand = true;
@@ -84,9 +81,7 @@ namespace Komorebi.OnScreen {
         }
 
         void signalsSetup () {
-
             dragAction.drag_end.connect ((actor, event_x, event_y) => {
-
                 // Disable Parallax
                 dateTimeParallax = false;
 
@@ -106,38 +101,35 @@ namespace Komorebi.OnScreen {
         }
 
         public void setDateTime() {
-
             setAlignment();
             setRotation();
 
-            if(opacity < 1)
+            if(opacity < 1){
                 fadeIn();
+            }
 
             opacity = dateTimeAlpha;
             shadowContainerActor.opacity = dateTimeShadowAlpha;
-
             setPosition();
-
             timeText.notify["width"].connect(() => {
-
                 setPosition();
                 setMargins();
 
             });
 
-            if(timeout > 0)
+            if(timeout > 0){
                 return; // No need to rerun
+            }
 
             timeout = Timeout.add(200, () => {
-
-                if(timeTwentyFour)
+                if(timeTwentyFour) {
                     timeFormat = "%H:%M";
-                else
+                } else {
                     timeFormat = "%l:%M %p";
+                }
 
                 var glibTime = new GLib.DateTime.now_local().format(timeFormat);
                 var glibDate = new GLib.DateTime.now_local().format("%A, %B %e");
-
                 timeText.set_markup(@"<span color='$dateTimeColor' font='$dateTimeTimeFont'>$glibTime</span>");
                 dateText.set_markup(@"<span color='$dateTimeColor' font='$dateTimeDateFont'>$glibDate</span>");
 
@@ -149,7 +141,6 @@ namespace Komorebi.OnScreen {
         }
 
         public void setAlignment() {
-
             if(dateTimeAlignment == "start") {
                 timeText.x_align = Clutter.ActorAlign.START;
                 timeShadowText.x_align = Clutter.ActorAlign.START;
@@ -165,7 +156,6 @@ namespace Komorebi.OnScreen {
         }
 
         public void setRotation() {
-
             rotation_angle_x = dateTimeRotationX;
             rotation_angle_y = dateTimeRotationY;
             rotation_angle_z = dateTimeRotationZ;
@@ -173,62 +163,59 @@ namespace Komorebi.OnScreen {
 
         public void setPosition() {
             var mainActor = parent.mainActor;
-
             switch (dateTimePosition) {
-
                 case "top_right":
                     x = mainActor.width - width;
                     y = 0;
-                break;
+                    break;
 
                 case "top_center":
                     x = (mainActor.width / 2) - (width / 2);
                     y = 0;
-                break;
+                    break;
 
                 case "top_left":
                     x = 0;
                     y = 0;
-                break;
+                    break;
 
                 case "center_right":
                     x = mainActor.width - width;
                     y = (mainActor.height / 2) - (height / 2);
-                break;
+                    break;
 
                 case "center":
                     x = (mainActor.width / 2) - (width / 2);
                     y = (mainActor.height / 2) - (height / 2);
-                break;
+                    break;
 
                 case "center_left":
                     x = 0;
                     y = (mainActor.height / 2) - (height / 2);
-                break;
+                    break;
 
                 case "bottom_right":
                     x = mainActor.width - width;
                     y = mainActor.height - height;
-                break;
+                    break;
 
                 case "bottom_center":
                     x = (mainActor.width / 2) - (width / 2);
                     y = mainActor.height - height;
-                break;
+                    break;
 
                 case "bottom_left":
                     x = 0;
                     y = mainActor.height - height;
-                break;
+                    break;
 
                 default:
-                break;
+                    break;
             }
         }
 
 
         public void setMargins() {
-
             translation_y = 0;
             translation_x = 0;
 
@@ -240,7 +227,6 @@ namespace Komorebi.OnScreen {
 
 
         private void moveTo(float x = -1, float y = -1) {
-
             save_easing_state ();
             set_easing_duration (90);
             if(x != -1) this.x = x;
@@ -250,25 +236,20 @@ namespace Komorebi.OnScreen {
         }
 
         public void fadeIn (int custom_duration = 90) {
-
             save_easing_state ();
             set_easing_duration (90);
             opacity = dateTimeAlpha;
             set_easing_mode (Clutter.AnimationMode.EASE_IN_SINE);
             restore_easing_state ();
-
             reactive = true;
-
         }
 
         public void fadeOut () {
-
             save_easing_state ();
             set_easing_duration (90);
             opacity = 0;
             set_easing_mode (Clutter.AnimationMode.EASE_IN_SINE);
             restore_easing_state ();
-
             reactive = false;
         }
     }

@@ -54,9 +54,6 @@ namespace Komorebi.OnScreen {
 		
 		Gtk.Box bottomPreferencesBox = new Box(Orientation.HORIZONTAL, 10);
 
-		Button donateButton = new Button.with_label("Donate");
-		Button reportButton = new Button.with_label("Report an issue");
-
 		// Contains wallpapers page widgets
 		Gtk.Box wallpapersPage = new Box(Orientation.VERTICAL, 10);
 
@@ -128,7 +125,7 @@ namespace Komorebi.OnScreen {
 			set_titlebar(headerBar);
 			applyCSS({this.notebook}, notebookCSS);
 			applyCSS({this.infoBar}, infoBarCSS);
-			applyCSS({headerBar, hideButton, quitButton, donateButton, reportButton}, headerCSS);
+			applyCSS({headerBar, hideButton, quitButton}, headerCSS);
 			addAlpha({this});
 
 			// Setup Widgets
@@ -169,9 +166,6 @@ namespace Komorebi.OnScreen {
 
 			bottomPreferencesBox.margin_top = 10;
 
-			donateButton.valign = Align.CENTER;
-			reportButton.valign = Align.CENTER;
-
 			infoBar.message_type = MessageType.WARNING;
 			infoBar.set_show_close_button(false);
 
@@ -193,21 +187,6 @@ namespace Komorebi.OnScreen {
 				Clutter.main_quit();
 
 			});
-
-			donateButton.released.connect(() => {
-
-				print("Thank you <3\n");
-				AppInfo.launch_default_for_uri("https://goo.gl/Yr1RQe", null); // Thank you <3
-				destroy();
-
-			});
-
-			reportButton.released.connect(() => {
-
-				AppInfo.launch_default_for_uri("https://goo.gl/aaJgN7", null);
-				destroy();
-			});
-
 
 			twentyFourHoursButton.toggled.connect (() => {
 
@@ -256,7 +235,6 @@ namespace Komorebi.OnScreen {
 			aboutGrid.attach(new Image.from_file("/System/Resources/Komorebi/komorebi.svg"), 0, 0, 1, 1);
 			aboutGrid.attach(titleBox, 1, 0, 1, 1);
 
-			bottomPreferencesBox.pack_start(donateButton);
 			bottomPreferencesBox.pack_end(reportButton);
 
 			preferencesPage.add(aboutGrid);

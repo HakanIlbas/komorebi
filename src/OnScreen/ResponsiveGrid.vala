@@ -21,7 +21,6 @@ using Clutter;
 namespace Komorebi.OnScreen {
 
     public class ResponsiveGrid : Actor {
-
         // Limit of items per column
         public int itemsLimit = 8;
 
@@ -30,34 +29,28 @@ namespace Komorebi.OnScreen {
         internal BoxLayout verticalLayout = new BoxLayout() {orientation = Clutter.Orientation.VERTICAL, spacing = 30};
 
         public ResponsiveGrid () {
-
             layout_manager = horizontalLayout;
             y_align = ActorAlign.START;
         }
 
         public void append (Actor item) {
-
             if(last_child != null)
                 if(last_child.get_n_children() < itemsLimit) {
                     last_child.add_child (item);
                     return;
                 }
 
-
             // Create a new column and add the new item to it
             var columnActor = new Actor() {layout_manager = verticalLayout, y_align = ActorAlign.START, y_expand = true};
-
             columnActor.add_child(item);
             add_child(columnActor);
         }
 
         public void clearIcons () {
-
             foreach (var child in get_children()) {
                 child.destroy_all_children();
                 remove_child(child);
             }
-
         }
     }
 }

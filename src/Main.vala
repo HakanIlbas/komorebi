@@ -23,13 +23,11 @@ namespace Komorebi {
     BackgroundWindow[] backgroundWindows;
 
     public static bool checkDesktopCompatible() {
-
         // We're not supporting Wayland at the moment
         // due to some restrictions
         if(Environment.get_variable ("XDG_SESSION_DESKTOP").contains("wayland")) {
             return false;
         }
-
         return true;
     }
 
@@ -46,7 +44,6 @@ namespace Komorebi {
 	}
 
     public static void main (string [] args) {
-
         print("Welcome to Komorebi\n");
 
         if(args[1] == "--version" || args[1] == "version") {
@@ -62,11 +59,9 @@ namespace Komorebi {
 
         GtkClutter.init (ref args);
         Gtk.init (ref args);
-
         readConfigurationFile();
 
         if(OnScreen.enableVideoWallpapers) {
-
             print("[INFO]: loading Gst\n");
             Gst.init (ref args);
         }
@@ -75,25 +70,22 @@ namespace Komorebi {
 
         var display = Gdk.Display.get_default ();
         int monitorCount = display.get_n_monitors();
-
-
         initializeClipboard(display);
-
         readWallpaperFile();
-
         backgroundWindows = new BackgroundWindow[monitorCount];
-        for (int i = 0; i < monitorCount; ++i)
-            backgroundWindows[i] = new BackgroundWindow(i);
 
+        for (int i = 0; i < monitorCount; ++i){
+            backgroundWindows[i] = new BackgroundWindow(i);
+        }
 
         var mainSettings = Gtk.Settings.get_default ();
-        // mainSettings.set("gtk-xft-dpi", (int) (1042 * 100), null);
         mainSettings.set("gtk-xft-antialias", 1, null);
         mainSettings.set("gtk-xft-rgba" , "none", null);
         mainSettings.set("gtk-xft-hintstyle" , "slight", null);
 
-        for (int i = 0; i < monitorCount; ++i)
+        for (int i = 0; i < monitorCount; ++i){
             backgroundWindows[i].fadeIn();
+        }
 
         Clutter.main();
     }

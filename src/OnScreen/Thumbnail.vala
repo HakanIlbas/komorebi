@@ -20,9 +20,7 @@ using Komorebi.Utilities;
 namespace Komorebi.OnScreen {
 
 	private class Thumbnail : EventBox {
-
 		string name = "";
-
 		Overlay overlay = new Overlay();
 		Image thumbnailImage = new Image();
 		Image borderImage = new Image.from_file("/System/Resources/Komorebi/thumbnail_border.svg");
@@ -32,69 +30,54 @@ namespace Komorebi.OnScreen {
 		public signal void clicked ();
 
 		construct {
-
 			add_events (Gdk.EventMask.BUTTON_RELEASE_MASK);
-
 			revealer.set_transition_duration(200);
 			revealer.set_transition_type(RevealerTransitionType.CROSSFADE);
-
-
 			overlay.add(thumbnailImage);
 			overlay.add_overlay(revealer);
 			add(overlay);
 		}
 
 		public Thumbnail (string path, string name) {
-
 			this.name = name;
-
 			thumbnailImage.pixbuf = new Gdk.Pixbuf.from_file_at_scale(path + name + "/wallpaper.jpg", 150, 100, false);
 
 			// Signals
 			button_release_event.connect(() => {
-				
 				wallpaperName = name;
 				showBorder();
 				clicked();
-				
 				readWallpaperFile();
 				updateConfigurationFile();
-
-				foreach (BackgroundWindow backgroundWindow in backgroundWindows)
+				foreach (BackgroundWindow backgroundWindow in backgroundWindows){
 					backgroundWindow.initializeConfigFile();
+				}
 
-
-				foreach(var thumbnail in thumbnailsList)
-					if(thumbnail.name != name)
+				foreach(var thumbnail in thumbnailsList){
+					if(thumbnail.name != name){
 						thumbnail.hideBorder();
+					}
+				}
 
 				return true;
 			});
 
 			revealer.set_reveal_child((wallpaperName == name));
-
 			// Add widgets
 			revealer.add(borderImage);
 		}
 
-
 		public Thumbnail.Add() {
-
 			thumbnailImage.pixbuf = new Gdk.Pixbuf.from_file_at_scale("/System/Resources/Komorebi/thumbnail_add.svg", 150, 100, false);
-
 		}
-
 
 		/* Shows the border */
 		public void showBorder () {
-
 			revealer.set_reveal_child(true);
-
 		}
 
 		/* Hides the border */
 		public void hideBorder () {
-
 			revealer.set_reveal_child(false);
 		}
 	}

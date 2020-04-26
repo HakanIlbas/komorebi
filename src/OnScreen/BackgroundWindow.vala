@@ -48,7 +48,6 @@ namespace Komorebi.OnScreen {
 	}
 
 	public class BackgroundWindow : Gtk.Window {
-
 		// this webview acts as a wallpaper (if necessary)
 		WebView webView = new WebView();
 		GtkClutter.Actor webViewActor;
@@ -89,9 +88,7 @@ namespace Komorebi.OnScreen {
 			{ "text/uri-list", 0, 0}
 		};
 
-
 		public BackgroundWindow (int monitorIndex) {
-
 			title = "Desktop";
 
 			// Get current monitor size
@@ -123,7 +120,6 @@ namespace Komorebi.OnScreen {
 				});
 			}
 
-
 			// Setup widgets
 			set_size_request(screenWidth, screenHeight);
 			resizable = false;
@@ -150,8 +146,9 @@ namespace Komorebi.OnScreen {
 			mainActor.add_child(dateTimeBox);
 			mainActor.add_child(assetActor);
 
-			if(desktopIcons != null)
+			if(desktopIcons != null){
 				mainActor.add_child(desktopIcons);
+			}
 
 			mainActor.add_child(bubbleMenu);
 
@@ -160,11 +157,9 @@ namespace Komorebi.OnScreen {
 
 			initializeConfigFile(); 
 			signalsSetup();
-
 		}
 
 		void getMonitorSize(int monitorIndex) {
-
 			Rectangle rectangle;
 			var screen = Gdk.Screen.get_default ();
 
@@ -174,13 +169,10 @@ namespace Komorebi.OnScreen {
 			screenWidth = rectangle.width;
 
 			move(rectangle.x, rectangle.y);
-
 		}
 
 		void signalsSetup () {
-
 			button_release_event.connect((e) => {
-
 				// Hide the bubble menu
 				if(bubbleMenu.opacity > 0) {
 					bubbleMenu.fadeOut();
@@ -190,31 +182,30 @@ namespace Komorebi.OnScreen {
 
 				// Show options
 				if(e.button == 3) {
-
-					if(bubbleMenu.opacity > 0)
+					if(bubbleMenu.opacity > 0){
 						return false;
+					}
 
-					if(desktopIcons != null)
+					if(desktopIcons != null){
 						if(e.x >= desktopIcons.x && e.x <= (desktopIcons.x + desktopIcons.width) && 
-							e.y >= desktopIcons.y && e.y <= (desktopIcons.y + desktopIcons.height))
+							e.y >= desktopIcons.y && e.y <= (desktopIcons.y + desktopIcons.height)){
 							return false;
+						}
+					}
 
 					bubbleMenu.fadeIn(e.x, e.y, MenuType.DESKTOP);
 					dimWallpaper();
 				}
-
 				return false;
 			});
 
 			motion_notify_event.connect((event) => {
-
 				// No parallax when menu is open
 				if(bubbleMenu.opacity > 0) {
 					return true;
 				}
 
 				var layer_coeff = 70;
-
 				if(dateTimeParallax) {
 					if(dateTimePosition == "center") {
 						dateTimeBox.x = (float)((mainActor.width - dateTimeBox.width) / 2 - (event.x - (mainActor.width / 2)) / layer_coeff);
@@ -231,7 +222,6 @@ namespace Komorebi.OnScreen {
 			});
 
 			focus_out_event.connect(() => {
-
 				// Hide the bubble menu
 				if(bubbleMenu.opacity > 0) {
 					bubbleMenu.fadeOut();
@@ -243,13 +233,10 @@ namespace Komorebi.OnScreen {
 			});
 
 			drag_motion.connect(dimWallpaper);
-
 			drag_leave.connect(() => unDimWallpaper());
 
 			drag_data_received.connect((widget, context, x, y, selectionData, info, time) => {
-
 				foreach(var uri in selectionData.get_uris()) {
-
 					// Path of the file
 					string filePath = uri.replace("file://","").replace("file:/","");
 					filePath = GLib.Uri.unescape_string (filePath);
@@ -269,108 +256,92 @@ namespace Komorebi.OnScreen {
 			});
 
 			webView.button_release_event.connect((e) => {
-
 				button_release_event(e);
 				return true;
 			});
 		}
 
 		public void initializeConfigFile () {
-
 			setWallpaper();
-
 			if(desktopIcons != null) {
-			
-				if(!showDesktopIcons)
+				if(!showDesktopIcons){
 					desktopIcons.fadeOut();
-				else
+				} else {
 					desktopIcons.fadeIn();
+				}
 			}
 
 			if(dateTimeVisible) {
-			
-				if(dateTimeAlwaysOnTop)
+				if(dateTimeAlwaysOnTop){
 					mainActor.set_child_above_sibling(dateTimeBox, assetActor);
-				else
+				} else {
 					mainActor.set_child_below_sibling(dateTimeBox, assetActor);
+				}
 				
 				dateTimeBox.setDateTime();
 
-			} else
+			} else {
 				dateTimeBox.fadeOut();
+			}
 
-			if((wallpaperType != "video" && wallpaperType != "web_page") && assetVisible)
+			if((wallpaperType != "video" && wallpaperType != "web_page") && assetVisible){
 				assetActor.setAsset();
-			else
+			} else {
 				assetActor.shouldAnimate();
+			}
 		}
 
 		void setWallpaper() {
-
 			var scaleWidth = screenWidth;
 			var scaleHeight = screenHeight;
 
 			if(wallpaperParallax) {
-
 				wallpaperActor.scale_y = 1.05f;
 				wallpaperActor.scale_x = 1.05f;
 
 			} else {
-
 				wallpaperActor.scale_y = 1.00f;
 				wallpaperActor.scale_x = 1.00f;   
 			}
 
 			if(enableVideoWallpapers) {
-				
 				if(wallpaperType == "video") {
-
 					var videoPath = @"file:///System/Resources/Komorebi/$wallpaperName/$videoFileName";
 					videoPlayback.uri = videoPath;
 					videoPlayback.playing = true;
-
 					wallpaperActor.set_content(videoContent);
-
 					return;
 				
 				} else {
-				
 					videoPlayback.playing = false;
 					videoPlayback.uri = "";
 				}
 			}
 
 			if (wallpaperType == "web_page") {
-
 				wallpaperFromUrl(webPageUrl);
-
 				wallpaperActor.set_content(null);
 				wallpaperPixbuf = null;
-
-				if(webViewActor.get_parent() != wallpaperActor)
+				if(webViewActor.get_parent() != wallpaperActor){
 					wallpaperActor.add_child(webViewActor);
+				}
 
 				return;
-
-			} else {
-
-				// remove webViewActor
-				if(webViewActor.get_parent() == wallpaperActor)
+			
+			// remove webViewActor
+			} else if(webViewActor.get_parent() == wallpaperActor){
 					wallpaperActor.remove_child(webViewActor);
 			}
 
 			wallpaperActor.set_content(wallpaperImage);
-
 			wallpaperPixbuf = new Gdk.Pixbuf.from_file_at_scale(@"/System/Resources/Komorebi/$wallpaperName/wallpaper.jpg",
 																scaleWidth, scaleHeight, false);
-
 			wallpaperImage.set_data (wallpaperPixbuf.get_pixels(), Cogl.PixelFormat.RGB_888,
 							 wallpaperPixbuf.get_width(), wallpaperPixbuf.get_height(),
 							 wallpaperPixbuf.get_rowstride());
 		}
 
 		public bool dimWallpaper () {
-
 			wallpaperActor.save_easing_state ();
 			wallpaperActor.set_easing_duration (400);
 			wallpaperActor.opacity = 100;
@@ -379,27 +350,27 @@ namespace Komorebi.OnScreen {
 
 			assetActor.opacity = 0;
 			dateTimeBox.opacity = 0;
-
 			return true;
 		}
 
 		bool unDimWallpaper () {
-
 			wallpaperActor.save_easing_state ();
 			wallpaperActor.set_easing_duration (400);
 			wallpaperActor.opacity = 255;
 			wallpaperActor.set_easing_mode (Clutter.AnimationMode.EASE_IN_SINE);
 			wallpaperActor.restore_easing_state ();
 
-			if(assetVisible)
+			if(assetVisible){
 				assetActor.opacity = 255;
+			}
+
 			dateTimeBox.fadeIn(200);
-			
 			if(desktopIcons != null) {
-				if(!showDesktopIcons)
+				if(!showDesktopIcons){
 					desktopIcons.fadeOut();
-				else
+				} else{
 					desktopIcons.fadeIn();
+				}
 			}
 
 			return true;
@@ -407,20 +378,18 @@ namespace Komorebi.OnScreen {
 
 		// loads a web page from a URL
 		public void wallpaperFromUrl(owned string url) {
-
 			url = url.replace("{{screen_width}}", @"$screenWidth").replace("{{screen_height}}", @"$screenHeight");
-
 			webView.load_uri(url);
 		}
 
 		/* Shows the window */
 		public void fadeIn() {
-
 			show_all();
 			dateTimeBox.setPosition();
 
-			if(desktopIcons != null)
+			if(desktopIcons != null){
 				desktopIcons.addIconsFromQueue();
+			}
 
 		}
 

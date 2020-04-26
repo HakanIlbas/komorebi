@@ -23,7 +23,6 @@ namespace Komorebi.OnScreen {
         public Text text = new Text();
 
         public BubbleMenuItem (string title) {
-
             // Properties
             set_reactive (true);
             x_align = ActorAlign.START;
@@ -38,30 +37,21 @@ namespace Komorebi.OnScreen {
             signalsSetup();
 
             add_child(text);
-
         }
 
         void signalsSetup () {
-
-
             button_press_event.connect((e) => {
-
                 opacity = 100;
-
                 return false;
             });
 
             motion_event.connect((e) => {
-
                 opacity = 200;
-
                 return false;
             });
 
             leave_event.connect((e) => {
-
                 opacity = 255;
-
                 return false;
             });
         }

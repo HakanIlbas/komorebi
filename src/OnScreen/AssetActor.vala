@@ -20,7 +20,6 @@ using Komorebi.Utilities;
 namespace Komorebi.OnScreen {
 
     public class AssetActor : Actor {
-
         BackgroundWindow parent;
 
         // Image(Asset) and its pixbuf
@@ -39,7 +38,6 @@ namespace Komorebi.OnScreen {
         }
 
         public void setAsset() {
-
             if(!assetVisible) {
                 pixbuf = null;
                 image.set_data (pixbuf.get_pixels(), pixbuf.has_alpha ? Cogl.PixelFormat.RGBA_8888 : Cogl.PixelFormat.RGB_888,
@@ -49,10 +47,12 @@ namespace Komorebi.OnScreen {
                 return;
             }
 
-            if(assetWidth <= 0)
+            if(assetWidth <= 0){
                 assetWidth = screenWidth;
-            if(assetHeight <= 0)
+            }
+            if(assetHeight <= 0) {
                 assetHeight = screenHeight;
+            }
 
             var assetPath = @"/System/Resources/Komorebi/$wallpaperName/assets.png";
 
@@ -62,15 +62,15 @@ namespace Komorebi.OnScreen {
                 return;
             }
 
-            if(assetWidth != 0 && assetHeight != 0)
+            if(assetWidth != 0 && assetHeight != 0){
                 pixbuf = new Gdk.Pixbuf.from_file_at_scale(assetPath, assetWidth, assetHeight, false);
-            else
+            } else {
                 pixbuf = new Gdk.Pixbuf.from_file(assetPath);
+            }
 
             image.set_data (pixbuf.get_pixels(), pixbuf.has_alpha ? Cogl.PixelFormat.RGBA_8888 : Cogl.PixelFormat.RGB_888,
                             pixbuf.get_width(), pixbuf.get_height(),
                             pixbuf.get_rowstride());
-
 
             x = 0;
             y = 0;
@@ -78,15 +78,14 @@ namespace Komorebi.OnScreen {
             remove_all_transitions();
 
             setMargins();
-
-            if(shouldAnimate())
+            if(shouldAnimate()){
                 animate();
-            else
+            } else {
                 fadeIn();
+            }
         }
 
         void setMargins() {
-
             translation_y = 0;
             translation_x = 0;
 
@@ -97,20 +96,15 @@ namespace Komorebi.OnScreen {
         }
 
         void animate () {
-
             if(assetAnimationSpeed <= 10) {
                 assetAnimationSpeed = 100;
                 print("[WARNING]: The Asset Animation Speed has been adjusted in this wallpaper. Please consider updating it to at least 100\n");
             }
 
-
             assetAnimationTimeout = Timeout.add(assetAnimationSpeed * 30, () => {
-
                 switch (assetAnimationMode) {
-
                     case "clouds":
                         if(cloudsDirection == "right") {
-
                             if(x + (width / 2) >= screenWidth)
                                 cloudsDirection = "left";
                             else {
@@ -122,10 +116,9 @@ namespace Komorebi.OnScreen {
                             }
 
                         } else {
-
-                            if(x <= 0)
+                            if(x <= 0) {
                                 cloudsDirection = "right";
-                            else {
+                            } else {
                                 save_easing_state ();
                                 set_easing_duration (assetAnimationSpeed * 100);
                                 x -= 60;
@@ -133,11 +126,9 @@ namespace Komorebi.OnScreen {
                                 restore_easing_state ();
                             }
                         }
-
-                    break;
+                        break;
 
                     case "light":
-
                         if(fadeType == "in") {
                             fadeIn(assetAnimationSpeed * 100);
                             fadeType = "out";
@@ -145,17 +136,13 @@ namespace Komorebi.OnScreen {
                             fadeOut(assetAnimationSpeed * 100);
                             fadeType = "in";
                         }
-
-
-                    break;
+                        break;
                 }
-
                 return true;
             });
         }
 
         public void fadeIn (int custom_duration = 90) {
-
             save_easing_state ();
             set_easing_duration (custom_duration);
             opacity = 255;
@@ -164,7 +151,6 @@ namespace Komorebi.OnScreen {
         }
 
         public void fadeOut (int custom_duration = 90) {
-
             save_easing_state ();
             set_easing_duration (custom_duration);
             opacity = 0;
@@ -173,25 +159,19 @@ namespace Komorebi.OnScreen {
         }
 
         public bool shouldAnimate () {
-
             if(wallpaperType == "video" ||
                 wallpaperType == "web_page" ||
                 assetAnimationMode == "noanimation") {
-                
                 if(assetAnimationTimeout > 0) {
-                
                     Source.remove(assetAnimationTimeout);
                     assetAnimationTimeout = 0;
                 }
 
                 remove_all_transitions();
                 fadeOut();
-
                 return false;
             }
-
             return true;
         }
-
     }
 }

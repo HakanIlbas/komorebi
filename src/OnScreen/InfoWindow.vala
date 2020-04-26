@@ -27,7 +27,6 @@ namespace Komorebi.OnScreen {
 
 
     public class InfoWindow : Gtk.Window {
-
     	// Box containing everything
     	private Box mainBox = new Box(Orientation.VERTICAL, 0);
 
@@ -48,7 +47,6 @@ namespace Komorebi.OnScreen {
 
         // Separator
         private Separator separator = new Separator(Orientation.HORIZONTAL);
-
 
         // Box more file info and properties
         private Box fileInfoBox = new Box(Orientation.VERTICAL, 5);
@@ -78,7 +76,6 @@ namespace Komorebi.OnScreen {
                                 }";
 
         string windowCSS = "*{
-
                                 background-color: rgba(25,25,25,0.7);
                                 border-width: 0px;
                                 box-shadow: none;
@@ -90,8 +87,8 @@ namespace Komorebi.OnScreen {
         string separatorCSS = "*{
                                 color: rgba(51,51,51,0.6);
                                 }";
-    	public InfoWindow() {
 
+    	public InfoWindow() {
             // Configure the window
             set_size_request(340, 390);
             resizable = false;
@@ -128,7 +125,6 @@ namespace Komorebi.OnScreen {
     		topBox.add(titleLabel);
     		topBox.add(sizeLabel);
 
-
             fileInfoBox.add(locationLabel);
             fileInfoBox.add(typeLabel);
             fileInfoBox.add(accessedLabel);
@@ -145,7 +141,6 @@ namespace Komorebi.OnScreen {
 
         /* Set window information */
         public void setInfoFromPath(string path) {
-
             File file = File.new_for_path(path);
             FileInfo fileInfo = file.query_info("%s,%s,%s,%s,%s,%s".printf(
                                        FileAttribute.STANDARD_SIZE,
@@ -168,9 +163,6 @@ namespace Komorebi.OnScreen {
             accessedLabel.set_value(formatDateTime((new DateTime.from_unix_utc(accessedTime)).to_local()));
             modifiedLabel.set_value(formatDateTime((new DateTime.from_unix_utc(modifiedTime)).to_local()));
             ownerLabel.set_value(owner);
-
         }
     }
-
-
 }
