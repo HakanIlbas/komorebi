@@ -19,9 +19,11 @@
 using Gtk;
 using Gdk;
 
+using Komorebi;
 using Komorebi.Utilities;
 
 namespace Komorebi.OnScreen {
+
 
 	public class PreferencesWindow : Gtk.Window {
 
@@ -46,7 +48,10 @@ namespace Komorebi.OnScreen {
 		Gtk.CheckButton twentyFourHoursButton = new Gtk.CheckButton.with_label ("Use 24-hour time");
 		Gtk.CheckButton showDesktopIconsButton = new Gtk.CheckButton.with_label ("Show desktop icons");
 		Gtk.CheckButton enableVideoWallpapersButton = new Gtk.CheckButton.with_label ("Enable Video Wallpapers (Restarting Komorebi is required)");
-
+		
+		Label volumeLabel = new Label("Volume: ");
+		Gtk.Scale volumeSlider = new Gtk.Scale.with_range(Orientation.HORIZONTAL, 0, 100, 5);
+		
 		Gtk.Box bottomPreferencesBox = new Box(Orientation.HORIZONTAL, 10);
 
 		Button donateButton = new Button.with_label("Donate");
@@ -116,7 +121,6 @@ namespace Komorebi.OnScreen {
 			}
 			";
 		public PreferencesWindow (string selectedTab = "preferences") {
-
 			title = "";
 			set_size_request(760, 500);
 			resizable = false;
@@ -130,11 +134,13 @@ namespace Komorebi.OnScreen {
 			// Setup Widgets
 			titleLabel.set_markup("<span font='Lato Light 30px' color='white'>Komorebi</span>");
 			aboutLabel.set_markup("<span font='Lato Light 15px' color='white'>by Abraham Masri @cheesecakeufo</span>");
+			volumeLabel.set_markup("<span font='Lato Light 15px' color='white'>Volume: </span>");
 
 			// showSystemStatsButton.active = showInfoBox;
 			twentyFourHoursButton.active = timeTwentyFour;
 			showDesktopIconsButton.active = showDesktopIcons;
 			enableVideoWallpapersButton.active = enableVideoWallpapers;
+			volumeSlider.set_value(getVolume(getBackgroundWindows()[0]));
 
 			setWallpaperNameLabel();
 
@@ -173,6 +179,9 @@ namespace Komorebi.OnScreen {
 
 			bottomWallpapersBox.margin = 25;
 			bottomWallpapersBox.margin_top = 10;
+
+			volumeSlider.set_value(getVolume(getBackgroundWindows()[0]) * 100);
+
 
 			// Signals
 			destroy.connect(() => { canOpenPreferences = true;});
@@ -231,6 +240,12 @@ namespace Komorebi.OnScreen {
 				setWallpaperNameLabel();
 			});
 
+			volumeSlider.value_changed.connect(() => {
+				BackgroundWindow bgw = getBackgroundWindows()[0];
+				setVolume(bgw, volumeSlider.get_value() / 100);
+				
+			});
+
 			// Add Widgets
 			headerBar.add(hideButton);
 			headerBar.pack_end(quitButton);
@@ -248,6 +263,13 @@ namespace Komorebi.OnScreen {
 			preferencesPage.add(twentyFourHoursButton);
 			preferencesPage.add(showDesktopIconsButton);
 			preferencesPage.add(enableVideoWallpapersButton);
+			
+			if (enableVideoWallpapersButton.get_active()){
+				preferencesPage.add(volumeLabel);
+				preferencesPage.add(volumeSlider);
+				preferencesPage.add(new Label(""));
+			}
+
 			preferencesPage.pack_end(bottomPreferencesBox);
 
 			bottomWallpapersBox.add(new Image.from_file("/System/Resources/Komorebi/info.svg"));

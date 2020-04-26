@@ -15,8 +15,8 @@
 
 using Clutter;
 
-using Komorebi.Utilities;
 using Komorebi;
+using Komorebi.Utilities;
 
 namespace Komorebi.OnScreen {
 
@@ -41,6 +41,8 @@ namespace Komorebi.OnScreen {
 		BubbleMenuItem changeWallpaperMenuItem;
 		BubbleMenuItem preferencesMenuItem;
 		BubbleMenuItem playPausePlaybackMenuItem;
+
+		BubbleMenuItem mute;
 
 		// Menu Items (Icon)
 		BubbleMenuItem moveToTrashMenuItem;
@@ -81,16 +83,20 @@ namespace Komorebi.OnScreen {
 			changeWallpaperMenuItem = new BubbleMenuItem("Change Wallpaper");
 			preferencesMenuItem = new BubbleMenuItem("Desktop Preferences");
 			playPausePlaybackMenuItem = new BubbleMenuItem("Play/Pause Playback");
+			mute = new BubbleMenuItem("Mute");
 
-			// icon items
+			// Icon items
 			moveToTrashMenuItem = new BubbleMenuItem("Move to Trash");
 			copyMenuItem = new BubbleMenuItem("Copy Path");
 			makeAliasMenuItem = new BubbleMenuItem("Make Alias");
 			getInfoMenuItem = new BubbleMenuItem("Get Info");
 
+
 			// Signals
 			signalsSetup();
 		}
+
+		
 
 		void signalsSetup () {
 
@@ -106,49 +112,33 @@ namespace Komorebi.OnScreen {
 
 
 			refreshMenuItem.button_press_event.connect(() => {
-
 				this.parent.wallpaperFromUrl(webPageUrl);
-
 				return true;
 			});
 
 			changeWallpaperMenuItem.button_press_event.connect(() => {
-
-				if(showDesktopIcons)
+				if(showDesktopIcons){
 					parent.desktopIcons.fadeOut();
+				}
 
 				fadeOut();
 
-				// Check if preferences window is already visible
-				if(canOpenPreferences) {
-
+				if(canOpenPreferences){
 					canOpenPreferences = false;
 					new PreferencesWindow("wallpapers");
-
 				}
-
 				return true;
 			});
 
 			preferencesMenuItem.button_press_event.connect(() => {
-
-				// Check if preferences window is already visible
-				if(canOpenPreferences) {
-
+				if(canOpenPreferences){
 					canOpenPreferences = false;
 					new PreferencesWindow();
-
 				}
 				return true;
 			});
 
 			playPausePlaybackMenuItem.button_press_event.connect(() => {
-
-				if(canOpenPreferences) {
-					canOpenPreferences = false;
-				
-				}
-
 				BackgroundWindow[] BackgroundWindows = getBackgroundWindows();
 
 				foreach (BackgroundWindow bgw in BackgroundWindows) {
@@ -158,8 +148,15 @@ namespace Komorebi.OnScreen {
 						bgw.videoContent.get_player().set_playing(true);
 					}
 				}
+				return true;
+			});
 
-			
+			mute.button_press_event.connect(() => {
+				BackgroundWindow[] BackgroundWindows = getBackgroundWindows();
+				foreach(BackgroundWindow bgw in BackgroundWindows) {
+					setVolume(bgw, 0);
+					
+				}
 				return true;
 			});
 
@@ -250,6 +247,7 @@ namespace Komorebi.OnScreen {
 				add_child(changeWallpaperMenuItem);
 				add_child(preferencesMenuItem);
 				add_child(playPausePlaybackMenuItem);
+				add_child(mute);
 
 			}
 

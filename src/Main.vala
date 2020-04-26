@@ -37,6 +37,14 @@ namespace Komorebi {
         return backgroundWindows;
     }
 
+    public static double getVolume(BackgroundWindow bgw) {
+        return bgw.videoContent.get_player().get_audio_volume();
+    }
+
+    public void setVolume(BackgroundWindow bgw, double val) {
+		bgw.videoContent.get_player().set_audio_volume(val);
+	}
+
     public static void main (string [] args) {
 
         print("Welcome to Komorebi\n");
