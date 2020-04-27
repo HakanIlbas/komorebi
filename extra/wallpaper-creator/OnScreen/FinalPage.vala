@@ -44,34 +44,26 @@ namespace WallpaperCreator.OnScreen {
             descLabel.hexpand = false;
             descLabel.selectable = true;
 
-            titleLabel.set_markup("<span font='Lato 20'>Done</span>");
-
-            var mv_command = @"sudo mv $(Environment.get_home_dir())/$(wallpaperName.replace(" ", "_").replace(".", "_").down()) /System/Resources/Komorebi";
-
-            descLabel.set_markup(@"<span font='Lato Light 12'>Open 'Terminal' then paste the following:\n<b>$mv_command</b>\nOnce done, you can change the wallpaper in <i>'Change Wallpaper'</i>.</span>");
+            titleLabel.set_markup("<span font='Lato 20'>Wallpaper added</span>");
 
             closeButton.margin_top = 20;
             closeButton.halign = Align.CENTER;
 
             // Signals
             closeButton.released.connect(() => {
-
                 print("My job is done. Good bye!\n");
                 Gtk.main_quit();
             });
-
 
             add(logo);
             add(titleLabel);
             add(descLabel);
             add(closeButton);
-
             createWallpaper();
         }
 
         /* Creates a wallpaper */
         private void createWallpaper() {
-
             // Create a new directory
             wallpaperName = wallpaperName.replace(" ", "_").replace(".", "_").down();
 
@@ -85,33 +77,26 @@ namespace WallpaperCreator.OnScreen {
             configKeyFile.set_string("Info", "WallpaperType", wallpaperType);
 
             if(wallpaperType == "video") {
-
                 var videoFileNameArray = filePath.split("/");
                 var videoFileName = videoFileNameArray[videoFileNameArray.length - 1];
                 configKeyFile.set_string("Info", "VideoFileName", videoFileName);
 
                 // Copy the video into our new dir
                 File.new_for_path(filePath).copy(File.new_for_path(dirPath + @"/$videoFileName"), FileCopyFlags.NONE);
-                
 
             } else if (wallpaperType == "web_page")
                 configKeyFile.set_string("Info", "WebPageUrl", webPageUrl);
 
-
             if(wallpaperType == "video" || wallpaperType == "web_page") {
-
                 // Move the thumbnail
                 File.new_for_path(thumbnailPath).copy(File.new_for_path(dirPath + "/wallpaper.jpg"), FileCopyFlags.NONE);
-            
             } else {
-
                 // Copy the wallpaper into our new dir
                 File.new_for_path(filePath).copy(File.new_for_path(dirPath + "/wallpaper.jpg"), FileCopyFlags.NONE);
             }
 
             configKeyFile.set_boolean("DateTime", "Visible", showDateTime);
             configKeyFile.set_boolean("DateTime", "Parallax", dateTimeParallax);
-
             configKeyFile.set_integer("DateTime", "MarginTop", marginTop);
             configKeyFile.set_integer("DateTime", "MarginRight", marginRight);
             configKeyFile.set_integer("DateTime", "MarginLeft", marginLeft);
@@ -137,9 +122,7 @@ namespace WallpaperCreator.OnScreen {
 
 
             if(wallpaperType == "image") {
-
                 configKeyFile.set_boolean("Wallpaper", "Parallax", wallpaperParallax);
-
                 if(assetPath == null || assetPath == "")
                     showAsset = false;
 
@@ -159,8 +142,8 @@ namespace WallpaperCreator.OnScreen {
             // save the key file
             var stream = new DataOutputStream (configFile.create (0));
             stream.put_string (configKeyFile.to_data ());
+            Posix.system(@"sudo mv $(Environment.get_home_dir())/$(wallpaperName.replace(" ", "_").replace(".", "_").down()) /System/Resources/Komorebi");
             stream.close ();
-
         }
     }
 }

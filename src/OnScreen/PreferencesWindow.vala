@@ -130,7 +130,7 @@ namespace Komorebi.OnScreen {
 
 			// Setup Widgets
 			titleLabel.set_markup("<span font='Lato Light 30px' color='white'>Komorebi</span>");
-			aboutLabel.set_markup("<span font='Lato Light 15px' color='white'>by Abraham Masri @cheesecakeufo</span>");
+			aboutLabel.set_markup("<span font='Lato Light 15px' color='white'>by Abraham Masri @cheesecakeufo \nRefined by Hakan Ilbas @HakanIlbas</span>");
 			volumeLabel.set_markup("<span font='Lato Light 15px' color='white'>Volume: </span>");
 
 			// showSystemStatsButton.active = showInfoBox;
@@ -234,8 +234,6 @@ namespace Komorebi.OnScreen {
 
 			aboutGrid.attach(new Image.from_file("/System/Resources/Komorebi/komorebi.svg"), 0, 0, 1, 1);
 			aboutGrid.attach(titleBox, 1, 0, 1, 1);
-
-			bottomPreferencesBox.pack_end(reportButton);
 
 			preferencesPage.add(aboutGrid);
 			preferencesPage.add(twentyFourHoursButton);

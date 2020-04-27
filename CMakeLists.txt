@@ -69,6 +69,7 @@ PACKAGES
     gtk+-3.0
     gstreamer-1.0
     webkit2gtk-4.0
+    posix
 OPTIONS
     --vapidir=${CMAKE_CURRENT_SOURCE_DIR}/vapi/
     --disable-warnings
