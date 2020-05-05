@@ -85,6 +85,7 @@ namespace Komorebi {
 
         for (int i = 0; i < monitorCount; ++i){
             backgroundWindows[i].fadeIn();
+            setVolume(backgroundWindows[i], 0.2);
         }
 
         Clutter.main();

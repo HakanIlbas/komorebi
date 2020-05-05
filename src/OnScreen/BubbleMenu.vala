@@ -41,8 +41,6 @@ namespace Komorebi.OnScreen {
 		BubbleMenuItem preferencesMenuItem;
 		BubbleMenuItem playPausePlaybackMenuItem;
 
-		BubbleMenuItem mute;
-
 		// Menu Items (Icon)
 		BubbleMenuItem moveToTrashMenuItem;
 		BubbleMenuItem copyMenuItem;
@@ -57,6 +55,10 @@ namespace Komorebi.OnScreen {
 
 		// To play/pause playback
 		bool playback;
+
+		BubbleMenuItem un_mute;
+		double latestvolume;
+		bool muted;
 
 		construct {
 			// Properties
@@ -80,13 +82,17 @@ namespace Komorebi.OnScreen {
 			changeWallpaperMenuItem = new BubbleMenuItem("Change Wallpaper");
 			preferencesMenuItem = new BubbleMenuItem("Desktop Preferences");
 			playPausePlaybackMenuItem = new BubbleMenuItem("Play/Pause Playback");
-			mute = new BubbleMenuItem("Mute");
+			un_mute = new BubbleMenuItem("Mute");
 
 			// Icon items
 			moveToTrashMenuItem = new BubbleMenuItem("Move to Trash");
 			copyMenuItem = new BubbleMenuItem("Copy Path");
 			makeAliasMenuItem = new BubbleMenuItem("Make Alias");
 			getInfoMenuItem = new BubbleMenuItem("Get Info");
+
+			// Used for (un)muting
+			latestvolume = 0.2;
+			muted = false;
 
 			// Signals
 			signalsSetup();
@@ -144,12 +150,30 @@ namespace Komorebi.OnScreen {
 				return true;
 			});
 
-			mute.button_press_event.connect(() => {
+			un_mute.button_press_event.connect(() => {
 				BackgroundWindow[] BackgroundWindows = getBackgroundWindows();
-				foreach(BackgroundWindow bgw in BackgroundWindows) {
-					setVolume(bgw, 0);
-					
+
+				print("Muted: " + muted.to_string());
+				print("Latest Volume: " + latestvolume.to_string());
+
+				if (muted) {
+					muted = false;
+					foreach(BackgroundWindow bgw in BackgroundWindows) {
+						setVolume(bgw, latestvolume);
+					}
+					un_mute.text.text = "Mute";
+
+
+				} else {
+					foreach(BackgroundWindow bgw in BackgroundWindows) {
+						latestvolume = getVolume(bgw);
+						setVolume(bgw, 0);
+					}
+					muted = true;
+					un_mute.text.text = "Unmute";
+
 				}
+
 				return true;
 			});
 
@@ -227,7 +251,7 @@ namespace Komorebi.OnScreen {
 				add_child(changeWallpaperMenuItem);
 				add_child(preferencesMenuItem);
 				add_child(playPausePlaybackMenuItem);
-				add_child(mute);
+				add_child(un_mute);
 			}
 
 			// Make sure we don't display off the screen
