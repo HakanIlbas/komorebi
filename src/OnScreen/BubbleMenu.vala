@@ -151,24 +151,16 @@ namespace Komorebi.OnScreen {
 			});
 
 			un_mute.button_press_event.connect(() => {
-				BackgroundWindow[] BackgroundWindows = getBackgroundWindows();
-
-				print("Muted: " + muted.to_string());
-				print("Latest Volume: " + latestvolume.to_string());
-
+				BackgroundWindow mainBGW = getBackgroundWindows()[];
 				if (muted) {
 					muted = false;
-					foreach(BackgroundWindow bgw in BackgroundWindows) {
-						setVolume(bgw, latestvolume);
-					}
+					setVolume(mainBGW, latestvolume);
 					un_mute.text.text = "Mute";
 
 
 				} else {
-					foreach(BackgroundWindow bgw in BackgroundWindows) {
-						latestvolume = getVolume(bgw);
-						setVolume(bgw, 0);
-					}
+					latestvolume = getVolume(mainBGW	);
+					setVolume(mainBGW, 0);
 					muted = true;
 					un_mute.text.text = "Unmute";
 

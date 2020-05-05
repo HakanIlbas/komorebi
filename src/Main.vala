@@ -83,6 +83,7 @@ namespace Komorebi {
         mainSettings.set("gtk-xft-rgba" , "none", null);
         mainSettings.set("gtk-xft-hintstyle" , "slight", null);
 
+        //Set default sound of video background to 20%
         for (int i = 0; i < monitorCount; ++i){
             backgroundWindows[i].fadeIn();
             setVolume(backgroundWindows[i], 0.2);
