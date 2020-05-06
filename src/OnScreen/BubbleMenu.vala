@@ -151,7 +151,7 @@ namespace Komorebi.OnScreen {
 			});
 
 			un_mute.button_press_event.connect(() => {
-				BackgroundWindow mainBGW = getBackgroundWindows()[];
+				BackgroundWindow mainBGW = getBackgroundWindows()[0];
 				if (muted) {
 					muted = false;
 					setVolume(mainBGW, latestvolume);
@@ -159,7 +159,7 @@ namespace Komorebi.OnScreen {
 
 
 				} else {
-					latestvolume = getVolume(mainBGW	);
+					latestvolume = getVolume(mainBGW);
 					setVolume(mainBGW, 0);
 					muted = true;
 					un_mute.text.text = "Unmute";

@@ -182,14 +182,11 @@ namespace Komorebi.OnScreen {
 
 			hideButton.released.connect(() => { destroy(); });
 			quitButton.released.connect(() => {
-
 				print("Quitting Komorebi. Good bye :)\n");
 				Clutter.main_quit();
-
 			});
 
 			twentyFourHoursButton.toggled.connect (() => {
-
 				timeTwentyFour = twentyFourHoursButton.active;
 				updateConfigurationFile();
 
@@ -198,7 +195,6 @@ namespace Komorebi.OnScreen {
 			showDesktopIconsButton.toggled.connect (() => { 
 				showDesktopIcons = showDesktopIconsButton.active;
 				updateConfigurationFile();
-
 				if (showDesktopIcons) {
 					foreach (BackgroundWindow backgroundWindow in backgroundWindows)
 						backgroundWindow.desktopIcons.fadeIn();
@@ -209,20 +205,20 @@ namespace Komorebi.OnScreen {
 			});
 
 			enableVideoWallpapersButton.toggled.connect (() => {
-
 				enableVideoWallpapers = enableVideoWallpapersButton.active;
 				updateConfigurationFile();
-
 			});
 
 			wallpapersSelector.wallpaperChanged.connect(() => {
 				setWallpaperNameLabel();
+				BackgroundWindow bgw = getBackgroundWindows()[0];
+				setVolume(bgw, volumeSlider.get_value() / 100);
+
 			});
 
 			volumeSlider.value_changed.connect(() => {
 				BackgroundWindow bgw = getBackgroundWindows()[0];
 				setVolume(bgw, volumeSlider.get_value() / 100);
-				
 			});
 
 			// Add Widgets
@@ -252,14 +248,12 @@ namespace Komorebi.OnScreen {
 			bottomWallpapersBox.add(currentWallpaperLabel);
 
 			if(!canPlayVideos()) {
-
 				infoBar.get_content_area().add(new Label("gstreamer1.0-libav is missing. You won't be able to set video wallpapers without it."));
 				wallpapersPage.add(infoBar);
 			}
 
 			wallpapersPage.add(wallpapersSelector);
 			wallpapersPage.add(bottomWallpapersBox);
-
 
 			if(selectedTab == "wallpapers") {
 				notebook.append_page(wallpapersPage, new Label("Wallpapers"));
@@ -269,28 +263,21 @@ namespace Komorebi.OnScreen {
 				notebook.append_page(wallpapersPage, new Label("Wallpapers"));
 			}
 
-
 			notebook.child_set_property (preferencesPage, "tab-expand", true);
 			notebook.child_set_property (wallpapersPage, "tab-expand", true);
-
 			add(notebook);
-
 			show_all();
 		}
 
 		/* Changes the wallpaper name label */
 		private void setWallpaperNameLabel() {
-
 			var prettyName = beautifyWallpaperName(wallpaperName);
 			currentWallpaperLabel.set_markup(@"<span font='Lato Light 15px' color='#bebebee6'>$prettyName</span>");
 		}
 
 		/* Shows the window */
 		public void FadeIn() {
-
 			show_all();
-
 		}
-
 	}
 }
